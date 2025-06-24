@@ -1,0 +1,28 @@
+<div id="radius-map-{{ content.mapradius.id }}" style="width:100%; height: {{ content.mapradius.height | default('400px') }};"></div>
+
+<script>
+setTimeout(function () {
+  const mapId = "radius-map-{{ content.mapradius.id }}";
+  const map = L.map(mapId, {
+    scrollWheelZoom: false
+  }).setView([{{ content.mapradius.latitude }}, {{ content.mapradius.longitude }}], {{ content.mapradius.zoom | default(10) }});
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  L.marker([{{ content.mapradius.latitude }}, {{ content.mapradius.longitude }}])
+    .addTo(map)
+    {% if content.mapradius.marker_label %}
+    .bindPopup("{{ content.mapradius.marker_label }}");
+    {% endif %}
+
+  L.circle([{{ content.mapradius.latitude }}, {{ content.mapradius.longitude }}], {
+    color: '{{ content.mapradius.colour | default("red") }}',
+    fillColor: '{{ content.mapradius.fill_colour | default("pink") }}',
+    fillOpacity: 0.4,
+    radius: {{ content.mapradius.radius_m }} * 1000
+  }).addTo(map);
+}, 300); // wait for Breakdance to render
+</script>
+
