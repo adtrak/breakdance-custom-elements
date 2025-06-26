@@ -91,7 +91,87 @@ class LocationsMapRadius extends \Breakdance\Elements\Element
 
     static function contentControls()
     {
-        return [];
+        return [c(
+        "controls",
+        "Controls",
+        [c(
+        "map_pin",
+        "Map Pin",
+        [],
+        ['type' => 'wpmedia', 'layout' => 'vertical', 'mediaOptions' => ['acceptedFileTypes' => ['image'], 'multiple' => false]],
+        false,
+        false,
+        [],
+      ), c(
+        "default_lat",
+        "Default Lat",
+        [],
+        ['type' => 'number', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      ), c(
+        "default_long",
+        "Default Long",
+        [],
+        ['type' => 'number', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      ), c(
+        "zoom",
+        "Zoom",
+        [],
+        ['type' => 'number', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      ), c(
+        "colour",
+        "Colour",
+        [],
+        ['type' => 'color', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      ), c(
+        "fill_colour",
+        "Fill Colour",
+        [],
+        ['type' => 'color', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      ), c(
+        "opacity",
+        "Opacity",
+        [],
+        ['type' => 'number', 'layout' => 'vertical', 'rangeOptions' => ['min' => 0, 'max' => 1, 'step' => 0.1]],
+        false,
+        false,
+        [],
+      ), c(
+        "radius",
+        "Radius",
+        [],
+        ['type' => 'number', 'layout' => 'vertical', 'rangeOptions' => ['min' => 1, 'max' => 20, 'step' => 0.1]],
+        false,
+        false,
+        [],
+      ), c(
+        "height",
+        "Height",
+        [],
+        ['type' => 'number', 'layout' => 'vertical', 'rangeOptions' => ['min' => 200, 'max' => 1000, 'step' => 10]],
+        false,
+        false,
+        [],
+      )],
+        ['type' => 'section', 'layout' => 'vertical'],
+        false,
+        false,
+        [],
+      )];
     }
 
     static function settingsControls()
@@ -101,7 +181,34 @@ class LocationsMapRadius extends \Breakdance\Elements\Element
 
     static function dependencies()
     {
-        return false;
+        return ['0' =>  ['frontendCondition' => '
+
+function enqueue_leaflet_assets() {
+    wp_enqueue_style(
+        \'leaflet-css\',
+        \'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css\',
+        array(),
+        \'1.7.1\'
+    );
+
+    wp_enqueue_script(
+        \'leaflet-js\',
+        \'https://unpkg.com/leaflet/dist/leaflet.js\',
+        array(),
+        \'1.7.1\',
+        false
+    );
+
+    wp_enqueue_script(
+        \'leaflet-geocoder\',
+        \'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js\',
+        array(\'leaflet-js\'),
+        \'1.0.0\',
+        false
+    );
+}
+add_action(\'wp_enqueue_scripts\', \'enqueue_leaflet_assets\');
+',],];
     }
 
     static function settings()
