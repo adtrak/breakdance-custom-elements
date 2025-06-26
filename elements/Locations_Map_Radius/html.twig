@@ -1,0 +1,98 @@
+<div id="mapid" style="height:500px; margin-bottom: 20px; z-index: 1000000000; position: relative; width:100%; background: red;"></div>
+
+<script type="text/javascript">
+  (function(){
+    const mapContainer = document.getElementById('mapid');
+    if (!mapContainer) return;
+
+    // Check if Leaflet is loaded
+    if (typeof L === 'undefined') {
+      console.error('Leaflet is not loaded');
+      return;
+    }
+
+    const locationsUrl = 'http://breakdance-pj-skips.local/wp-content/themes/breakdance-zero-theme-master/locations.json';
+
+    const map = L.map(mapContainer, {
+        scrollWheelZoom: false
+    }).setView([50.8134566743972, -0.582212146559764], 11);
+
+    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attributionControl: false
+    }).addTo(map);
+
+    map.attributionControl.remove();
+
+    fetch(locationsUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(locations => {
+            if (!Array.isArray(locations) || locations.length === 0) {
+              console.warn('No valid locations found');
+              return;
+            }
+
+            let bounds = [];
+
+            locations.forEach(location => {
+                const lat = parseFloat(location.lat);
+                const lon = parseFloat(location.lon);
+                
+                // Validate coordinates
+                if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                    bounds.push([lat, lon]);
+                } else {
+                    console.warn('Invalid coordinates:', location);
+                }
+            });
+
+            if (bounds.length > 0) {
+                const latLngBounds = L.latLngBounds(bounds);
+                map.fitBounds(latLngBounds);
+
+                const center = latLngBounds.getCenter();
+                let maxDistance = 0;
+
+                bounds.forEach(point => {
+                    const distance = map.distance(center, point);
+                    if (distance > maxDistance) {
+                        maxDistance = distance;
+                    }
+                });
+
+                // Add some padding to the circle
+                const paddedRadius = maxDistance * 1.1;
+
+                L.circle(center, {
+                    color: '#005EAB',
+                    fillColor: '#005EAB',
+                    fillOpacity: 0.3,
+                    radius: paddedRadius
+                }).addTo(map);
+
+                // Use a default icon if custom icon fails to load
+                const customIcon = L.icon({
+                    iconUrl: "https://www.datocms-assets.com/19381/1632907492-goldenmed-300x239.png?auto=format&dpr=1&h=514&w=200",
+                    iconSize: [40, 50],
+                    iconAnchor: [20, 25],
+                    popupAnchor: [0, -20]
+                });
+
+                L.marker(center, { icon: customIcon })
+                    .bindPopup('Main Branch')
+                    .addTo(map);
+            } else {
+                console.warn('No valid coordinates found in locations data');
+            }
+        })
+        .catch(error => {
+          console.error('Error loading locations:', error);
+          // Fallback: show a default view
+          map.setView([50.8134566743972, -0.582212146559764], 8);
+        });
+})();
+</script>
