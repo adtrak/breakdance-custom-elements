@@ -74,6 +74,9 @@
             if (bounds.length > 0) {
                 const latLngBounds = L.latLngBounds(bounds);
                 map.fitBounds(latLngBounds);
+                
+
+
 
                 const center = latLngBounds.getCenter();
                 let maxDistance = 0;
@@ -104,9 +107,4 @@
           map.setView([{{ content.controls.default_lat }}, {{ content.controls.default_long }}], {{ content.controls.zoom }});
         });
 })();
-</script>
-
-<script>
-  const locationsUrl = `${od.theme_url}/locations.json?v=${Date.now()}`;
-  console.log(locationsUrl);
 </script>
