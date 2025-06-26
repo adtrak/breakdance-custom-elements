@@ -11,7 +11,9 @@
       return;
     }
 
-    const locationsUrl = 'http://breakdance-pj-skips.local/wp-content/themes/breakdance-zero-theme-master/locations.json';
+    // const locationsUrl = 'http://breakdance-pj-skips.local/wp-content/themes/breakdance-zero-theme-master/locations.json';
+    
+    const locationsUrl = '/wp-content/plugins/breakdance-custom-elements/elements/Locations_Map_Radius/locations.json';
 
     const map = L.map(mapContainer, {
         scrollWheelZoom: false
@@ -54,9 +56,15 @@
                 if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                     bounds.push([lat, lon]);
                     
-                    // Add marker for each location with its name
+                    // Create popup content with optional link
+                    let popupContent = location.name;
+                    if (location.link) {
+                        popupContent = `<a href="${location.link}">${location.name}</a>`;
+                    }
+                    
+                    // Add marker for each location with its name (and link if available)
                     L.marker([lat, lon], { icon: customIcon })
-                        .bindPopup(location.name)
+                        .bindPopup(popupContent)
                         .addTo(map);
                 } else {
                     console.warn('Invalid coordinates:', location);
@@ -96,4 +104,9 @@
           map.setView([{{ content.controls.default_lat }}, {{ content.controls.default_long }}], {{ content.controls.zoom }});
         });
 })();
+</script>
+
+<script>
+  const locationsUrl = `${od.theme_url}/locations.json?v=${Date.now()}`;
+  console.log(locationsUrl);
 </script>

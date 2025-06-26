@@ -213,7 +213,7 @@ add_action(\'wp_enqueue_scripts\', \'enqueue_leaflet_assets\');
 
     static function settings()
     {
-        return false;
+        return ['dependsOnGlobalScripts' => true];
     }
 
     static function addPanelRules()
