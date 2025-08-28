@@ -40,13 +40,27 @@
 
             let bounds = [];
 
-            // Use a default icon if custom icon fails to load
-            const customIcon = L.icon({
-                iconUrl: "{{content.controls.map_pin.url}}",
-                iconSize: [40, 50],
-                iconAnchor: [20, 25],
-                popupAnchor: [0, -20]
-            });
+            // Determine which icon to use
+            const customIconUrl = "{{content.controls.map_pin.url}}";
+            
+            let customIcon;
+            if (customIconUrl && customIconUrl.trim() !== '') {
+                // Use custom uploaded icon
+                customIcon = L.icon({
+                    iconUrl: customIconUrl,
+                    iconSize: [40, 50],
+                    iconAnchor: [20, 25],
+                    popupAnchor: [0, -20]
+                });
+            } else {
+                // Use CSS mask-based fallback icon
+                customIcon = L.divIcon({
+                    className: 'custom-map-pin-icon',
+                    iconSize: [40, 50],
+                    iconAnchor: [20, 25],
+                    popupAnchor: [0, -20]
+                });
+            }
 
             locations.forEach(location => {
                 const lat = parseFloat(location.lat);
@@ -120,3 +134,19 @@
         });
 })();
 </script>
+
+<style>
+    .custom-map-pin-icon {
+        background-color: {{ content.controls.colour }};
+        -webkit-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNjQwIj48cGF0aCBkPSJNMzIwIDY0QzIxNCA2NCAxMjggMTQ4LjQgMTI4IDI1Mi42QzEyOCAzNzEuOSAyNDguMiA1MTQuOSAyOTguNCA1NjkuNEMzMTAuMiA1ODIuMiAzMjkuOCA1ODIuMiAzNDEuNiA1NjkuNEMzOTEuOCA1MTQuOSA1MTIgMzcxLjkgNTEyIDI1Mi42QzUxMiAxNDguNCA0MjYgNjQgMzIwIDY0eiIvPjwvc3ZnPg==');
+        mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNjQwIj48cGF0aCBkPSJNMzIwIDY0QzIxNCA2NCAxMjggMTQ4LjQgMTI4IDI1Mi42QzEyOCAzNzEuOSAyNDguMiA1MTQuOSAyOTguNCA1NjkuNEMzMTAuMiA1ODIuMiAzMjkuOCA1ODIuMiAzNDEuNiA1NjkuNEMzOTEuOCA1MTQuOSA1MTIgMzcxLjkgNTEyIDI1Mi42QzUxMiAxNDguNCA0MjYgNjQgMzIwIDY0eiIvPjwvc3ZnPg==');
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        width: 40px;
+        height: 50px;
+    }
+</style>
