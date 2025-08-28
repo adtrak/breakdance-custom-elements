@@ -56,16 +56,23 @@
                 if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                     bounds.push([lat, lon]);
                     
-                    // Create popup content with optional link
-                    let popupContent = location.name;
-                    if (location.link) {
-                        popupContent = `<a href="${location.link}">${location.name}</a>`;
-                    }
+                    // Create popup content with location name as link and phone number
+                    let popupContent = '';
                     
-                    // Add marker for each location with its name (and link if available)
+                    if (location.page_link) {
+                        popupContent = `<a href="${location.page_link}">${location.name}</a>`;
+                    } else {
+                        popupContent = location.name;
+                    }
+
+                    if (location.phone) {
+                        popupContent += `<br><a href="tel:${location.phone}">${location.phone}</a>`;
+                    }
+
                     L.marker([lat, lon], { icon: customIcon })
-                        .bindPopup(popupContent)
-                        .addTo(map);
+                    .bindPopup(popupContent)
+                    .addTo(map);
+
                 } else {
                     console.warn('Invalid coordinates:', location);
                 }
