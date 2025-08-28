@@ -216,7 +216,7 @@ function enqueue_leaflet_assets() {
     );
 }
 add_action(\'wp_enqueue_scripts\', \'enqueue_leaflet_assets\');
-',],];
+','scripts' => ['https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'],'styles' => ['https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'],],];
     }
 
     static function settings()

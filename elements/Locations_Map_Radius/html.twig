@@ -1,4 +1,4 @@
-<div id="mapid" style="height:{{ content.controls.height }}px; margin-bottom: 20px; z-index: 1000000000; position: relative; width:100%;"></div>
+<div id="mapid" style="height:{{ content.controls.height }}px;"></div>
 
 <script type="text/javascript">
   (function(){
@@ -19,7 +19,7 @@
         scrollWheelZoom: false
     }).setView([{{ content.controls.default_lat }}, {{ content.controls.default_long }}], {{ content.controls.zoom }});
 
-    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attributionControl: false
     }).addTo(map);
 
@@ -87,6 +87,9 @@
                         maxDistance = distance;
                     }
                 });
+              
+             // console.log(maxDistance);
+              
 
                 // Add some padding to the circle
                 const paddedRadius = maxDistance * {{ content.controls.radius }};
@@ -100,6 +103,8 @@
             } else {
                 console.warn('No valid coordinates found in locations data');
             }
+            
+           // console.log(paddedRadius);
         })
         .catch(error => {
           console.error('Error loading locations:', error);
